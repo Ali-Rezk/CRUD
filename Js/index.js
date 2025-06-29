@@ -1,5 +1,6 @@
 var siteNameInput = document.getElementById("name");
 var siteUrlInput = document.getElementById("url");
+var searchInput = document.getElementById("search");
 var sitesList = [];
 var index = 0;
 
@@ -9,7 +10,7 @@ if (localStorage.getItem("sites") !== null) {
 }
 
 function addSite() {
-  var sites = { Name: siteNameInput.value, url: siteUrlInput.value };
+  var sites = { name: siteNameInput.value, url: siteUrlInput.value };
 
   if (urlValidation() === true && nameValidation() === true) {
     sitesList.push(sites);
@@ -27,7 +28,7 @@ function displaySites() {
   for (i = 0; i < sitesList.length; i++) {
     container += `<tr>
             <td>${i}</td>
-            <td>${sitesList[i].Name}</td>
+            <td>${sitesList[i].name}</td>
             <td>
               <button onclick="${visit(i)}" class="btn visit-btn">
                 <i class="fa-solid fa-eye pe-2"></i>
@@ -52,10 +53,46 @@ function displaySites() {
   document.getElementById("tbody").innerHTML = container;
 }
 
+function searchItem() {
+  var container = "";
+
+  for (i = 0; i < sitesList.length; i++) {
+    if (
+      sitesList[i].name.toLowerCase().includes(searchInput.value.toLowerCase())
+    ) {
+      container += `<tr>
+              <td>${i}</td>
+              <td>${sitesList[i].name}</td>
+              <td>
+                <button onclick="${visit(i)}" class="btn visit-btn">
+                  <i class="fa-solid fa-eye pe-2"></i>
+                  Visit
+                </button>
+              </td>
+              <td>
+                <button onclick="select(${i})" class="btn btn-warning pe-2 delete-btn text-white" >
+                  <i class="fa-solid fa-pen-to-square"></i>
+                  Edit
+                </button>
+              </td>
+              <td>
+                <button onclick="deleteSite(${i})" class="btn btn-danger pe-2 delete-btn" >
+                  <i class="fa-solid fa-trash"></i>
+                  Delete
+                </button>
+              </td>
+            </tr>`;
+    }
+  }
+  document.getElementById("tbody").innerHTML = container;
+
+  console.log(searchInput.value);
+}
+
 function select(i) {
   index = i;
 
-  siteNameInput.value = sitesList[i].Name;
+  siteNameInput.value = sitesList[i].name;
   siteUrlInput.value = sitesList[i].url;
   document.getElementById("update-btn").classList.remove("d-none");
   document.getElementById("submit-btn").classList.add("d-none");
@@ -63,9 +100,8 @@ function select(i) {
 
 function updateSite() {
   if (urlValidation() === true && nameValidation() === true) {
-    sitesList[index].Name = siteNameInput.value;
+    sitesList[index].name = siteNameInput.value;
     sitesList[index].url = siteUrlInput.value;
-    console.log(index);
     localStorage.setItem("sites", JSON.stringify(sitesList));
   } else {
     document.getElementById("alert-box").classList.remove("d-none");
