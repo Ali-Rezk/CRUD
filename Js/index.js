@@ -1,6 +1,7 @@
 var siteNameInput = document.getElementById("name");
 var siteUrlInput = document.getElementById("url");
 var sitesList = [];
+var index = 0;
 
 if (localStorage.getItem("sites") !== null) {
   sitesList = JSON.parse(localStorage.getItem("sites"));
@@ -34,6 +35,12 @@ function displaySites() {
               </button>
             </td>
             <td>
+              <button onclick="select(${i})" class="btn btn-warning pe-2 delete-btn text-white" >
+                <i class="fa-solid fa-pen-to-square"></i>
+                Edit
+              </button>
+            </td>
+            <td>
               <button onclick="deleteSite(${i})" class="btn btn-danger pe-2 delete-btn" >
                 <i class="fa-solid fa-trash"></i>
                 Delete
@@ -43,6 +50,31 @@ function displaySites() {
   }
 
   document.getElementById("tbody").innerHTML = container;
+}
+
+function select(i) {
+  index = i;
+
+  siteNameInput.value = sitesList[i].Name;
+  siteUrlInput.value = sitesList[i].url;
+  document.getElementById("update-btn").classList.remove("d-none");
+  document.getElementById("submit-btn").classList.add("d-none");
+}
+
+function updateSite() {
+  if (urlValidation() === true && nameValidation() === true) {
+    sitesList[index].Name = siteNameInput.value;
+    sitesList[index].url = siteUrlInput.value;
+    console.log(index);
+    localStorage.setItem("sites", JSON.stringify(sitesList));
+  } else {
+    document.getElementById("alert-box").classList.remove("d-none");
+  }
+
+  document.getElementById("submit-btn").classList.remove("d-none");
+  document.getElementById("update-btn").classList.add("d-none");
+
+  displaySites();
 }
 
 function deleteSite(i) {
@@ -83,12 +115,10 @@ function urlValidation() {
   if (URLReg.test(urlTest)) {
     document.getElementById("url").classList.add("is-valid");
     document.getElementById("url").classList.remove("is-invalid");
-    console.log("true");
     return true;
   } else {
     document.getElementById("url").classList.add("is-invalid");
     document.getElementById("url").classList.remove("is-valid");
-    console.log("false");
     return false;
   }
 }

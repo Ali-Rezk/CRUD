@@ -57,18 +57,28 @@
         <button onclick="addSite()" class="m-auto btn px-5" id="submit-btn">
           Submit
         </button>
+        <button
+          onclick="updateSite()"
+          class="m-auto btn px-5 d-none"
+          id="update-btn"
+        >
+          Update
+        </button>
       </div>
+
       <table class="table text-center mt-4">
         <thead>
           <tr>
             <th>Index</th>
             <th>Website Name</th>
             <th>Visit</th>
+            <th>Edit</th>
             <th>Delete</th>
           </tr>
         </thead>
         <tbody id="tbody"></tbody>
       </table>
+
       <div
         class="alert-box blur position-absolute h-100 w-100 d-none"
         id="alert-box"
